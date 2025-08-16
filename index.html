@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -250,6 +250,21 @@
             letter-spacing: 1px;
         }
 
+        .footer {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 2px dotted #d4c5a9;
+            text-align: center;
+        }
+
+        .claude-attribution {
+            font-size: 0.8rem;
+            color: #8b7355;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
         @media (max-width: 360px) {
             .container {
                 padding: 15px;
@@ -286,7 +301,7 @@
     <div class="container">
         <!-- Logo Section -->
         <div class="logo-section">
-            <img class="pixel-logo" src="http://heyalex.co/hey-alex-logo.png">
+            <img class="pixel-logo" src="http://heyalex.co/hey-alex-logo.png" alt="Hey Alex Logo">
             <div class="logo">Hey Alex</div>
         </div>
 
@@ -379,10 +394,15 @@
                 <div class="example-answer">15% of 247 = 37.05. To calculate: 247 × 0.15 = 37.05</div>
             </div>
         </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="claude-attribution">Powered Responsibly by Claude</div>
+        </div>
     </div>
 
     <script>
-function handleSubscribe() {
+        function handleSubscribe() {
             // Redirect directly to your Stripe payment link
             window.location.href = 'https://buy.stripe.com/cNifZgcv4dD3dsD0cLebu03';
         }
