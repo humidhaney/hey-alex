@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Hey Alex</title>
+    <meta name="description" content="Sign up for Hey Alex and start getting instant answers via SMS without endless scrolling.">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Courier Prime', monospace;
+            line-height: 1.7;
+            background: #f5f1e8;
+            color: #2c2416;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 1px 1px, rgba(44,36,22,0.1) 1px, transparent 0);
+            background-size: 20px 20px;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 30px 25px;
+            background: #f9f6ef;
+            min-height: 100vh;
+            border-left: 3px solid #d4c5a9;
+            border-right: 3px solid #d4c5a9;
+            box-shadow: 
+                inset 0 0 0 1px rgba(212,197,169,0.3),
+                0 0 30px rgba(44,36,22,0.1);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: #8b7355;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: #5a4a35;
+        }
+
+        .back-link::before {
+            content: "← ";
+            margin-right: 5px;
+        }
+
+        .logo-section {
+            text-align: center;
+            padding: 20px 0 25px;
+            border-bottom: 2px dotted #d4c5a9;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pixel-logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #8b7355, #5a4a35);
+            border-radius: 12px;
+            position: relative;
+            image-rendering: pixelated;
+            border: 3px solid #d4c5a9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #f9f6ef;
+            font-weight: 700;
+        }
+
+        .pixel-logo::before {
+            content: "📱";
+            font-size: 3rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #5a4a35;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+        }
+
+        .logo::before {
+            content: '"';
+            color: #8b7355;
+        }
+
+        .logo::after {
+            content: '"';
+            color: #8b7355;
+        }
+
+        .hero-tagline {
+            font-size: 1.1rem;
+            color: #5a4a35;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            padding: 15px;
+            text-align: center;
+            font-style: italic;
+            background: #f2ede3;
+            border: 1px solid #d4c5a9;
+            border-radius: 8px;
+        }
+
+        .highlight {
+            color: #8b7355;
+            font-weight: 700;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+        }
+
+        .pricing-section {
+            background: #f2ede3;
+            border: 2px solid #d4c5a9;
+            border-radius: 8px;
+            padding: 25px 20px;
+            text-align: center;
+            margin: 35px 0;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(44,36,22,0.1);
+        }
+
+        .pricing-section::before {
+            content: "GET STARTED";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f9f6ef;
+            padding: 0 15px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #8b7355;
+            letter-spacing: 2px;
+        }
+
+        .price-header {
+            margin-bottom: 25px;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #5a4a35;
+            margin-bottom: 5px;
+        }
+
+        .price-period {
+            font-size: 1rem;
+            color: #8b7355;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .value-highlight {
+            background: #8b7355;
+            color: #f9f6ef;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+        }
+
+        .price-description {
+            font-size: 0.9rem;
+            color: #6b5a42;
+            font-style: italic;
+        }
+
+        .signup-form {
+            background: #ebe5d7;
+            border: 1px solid #d4c5a9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-header h4 {
+            font-size: 1.1rem;
+            color: #5a4a35;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-header p {
+            font-size: 0.85rem;
+            color: #6b5a42;
+            font-style: italic;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #5a4a35;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="tel"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #d4c5a9;
+            border-radius: 4px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 1rem;
+            background: #f9f6ef;
+            color: #2c2416;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="tel"]:focus {
+            outline: none;
+            border-color: #8b7355;
+            box-shadow: 0 0 0 2px rgba(139,115,85,0.2);
+        }
+
+        .checkbox-group {
+            margin: 20px 0;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: #6b5a42;
+            user-select: none;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d4c5a9;
+            border-radius: 4px;
+            background: #f9f6ef;
+            margin-right: 12px;
+            margin-top: 2px;
+            position: relative;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkbox-label:hover .checkmark {
+            border-color: #8b7355;
+            background: #f2ede3;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked + .checkmark {
+            background: #5a4a35;
+            border-color: #5a4a35;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+            content: "✓";
+            color: #f9f6ef;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .checkbox-label input[type="checkbox"]:focus + .checkmark {
+            box-shadow: 0 0 0 2px rgba(139,115,85,0.3);
+        }
+
+        .checkbox-text {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .continue-btn {
+            width: 100%;
+            padding: 15px;
+            background: #5a4a35;
+            color: #f9f6ef;
+            border: 2px solid #5a4a35;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Courier Prime', monospace;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 20px;
+        }
+
+        .continue-btn:hover {
+            background: #f9f6ef;
+            color: #5a4a35;
+            transform: translateY(-1px);
+        }
+
+        .continue-btn:disabled {
+            background: #ccc;
+            border-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+            background: #ffeaea;
+            border: 1px solid #f5c6c6;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .powered-by {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.75rem;
+            color: #8b7355;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 12px;
+            background: #f2ede3;
+            border: 1px solid #d4c5a9;
+            border-radius: 4px;
+            transition: transform 0.2s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(44,36,22,0.1);
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .feature-text {
+            font-size: 0.8rem;
+            color: #6b5a42;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .benefits-list {
+            background: #f2ede3;
+            border: 1px solid #d4c5a9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .benefits-list h3 {
+            font-size: 1rem;
+            color: #5a4a35;
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .benefits-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefits-list li {
+            padding: 6px 0;
+            font-size: 0.9rem;
+            color: #6b5a42;
+        }
+
+        .benefits-list li::before {
+            content: "✓ ";
+            color: #8b7355;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .loading {
+            display: none;
+        }
+
+        @media (max-width: 360px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .price {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Back Link -->
+        <a href="#" class="back-link" onclick="history.back(); return false;">Back to main page</a>
+
+        <!-- Logo Section -->
+        <div class="logo-section">
+            <div class="pixel-logo"></div>
+            <div class="logo">Hey Alex</div>
+        </div>
+
+        <!-- Signup Section - Moved to top -->
+        <div class="pricing-section">
+            <div class="price-header">
+                <div class="price">$20</div>
+                <div class="price-period">per month</div>
+                <div class="value-highlight">Just $0.67 per day</div>
+                <div class="price-description">300 questions included • Cancel anytime</div>
+            </div>
+
+            <div class="signup-form">
+                <div class="form-header">
+                    <h4>Start Your Digital Detox</h4>
+                    <p>Enter your details to begin your subscription</p>
+                </div>
+                
+                <form id="user-details-form">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required placeholder="e.g. Sarah" autocomplete="given-name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <input type="tel" id="phoneNumber" name="phoneNumber" required placeholder="e.g. (555) 123-4567" autocomplete="tel">
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="smsConsent" name="smsConsent" required>
+                            <span class="checkmark"></span>
+                            <span class="checkbox-text">YES, I agree to receive SMS text messages from Hey Alex. Text HELP for help, STOP to cancel at any time.</span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="continue-btn">
+                        <span class="btn-text">Continue to Payment</span>
+                        <span class="loading" style="display: none;">Processing...</span>
+                    </button>
+                </form>
+            </div>
+            
+            <div class="error-message" id="error-message"></div>
+            <div class="powered-by">Secured by Stripe</div>
+        </div>
+
+        <!-- Hero Tagline -->
+        <div class="hero-tagline">
+            Ready to <span class="highlight">stay connected</span> while living offline? 
+            Get instant answers via SMS — no apps, no browsing, no endless scrolling.
+        </div>
+
+        <!-- Features -->
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🌤️</div>
+                <div class="feature-text">Weather & Forecasts</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🍕</div>
+                <div class="feature-text">Restaurant Info</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📰</div>
+                <div class="feature-text">Current News</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🏪</div>
+                <div class="feature-text">Business Details</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🧠</div>
+                <div class="feature-text">Smart Answers</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📍</div>
+                <div class="feature-text">Local Search</div>
+            </div>
+        </div>
+
+        <!-- Benefits List -->
+        <div class="benefits-list">
+            <h3>What You Get</h3>
+            <ul>
+                <li>No apps to download or manage</li>
+                <li>Works on any phone, even flip phones</li>
+                <li>Instant answers without internet rabbit holes</li>
+                <li>Personal assistant that knows your location</li>
+                <li>Perfect for digital minimalists</li>
+                <li>300 questions per month</li>
+                <li>Cancel anytime, no commitments</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function validatePhoneNumber(phone) {
+            // Remove all non-digits
+            const cleaned = phone.replace(/\D/g, '');
+            
+            // Check if it's a valid US phone number (10 or 11 digits)
+            if (cleaned.length === 10 || (cleaned.length === 11 && cleaned[0] === '1')) {
+                return true;
+            }
+            return false;
+        }
+
+        function formatPhoneNumber(phone) {
+            const cleaned = phone.replace(/\D/g, '');
+            
+            if (cleaned.length === 10) {
+                return `(${cleaned.slice(0,3)}) ${cleaned.slice(3,6)}-${cleaned.slice(6)}`;
+            } else if (cleaned.length === 11 && cleaned[0] === '1') {
+                return `+1 (${cleaned.slice(1,4)}) ${cleaned.slice(4,7)}-${cleaned.slice(7)}`;
+            }
+            
+            return phone;
+        }
+
+        function showError(message) {
+            const errorElement = document.getElementById('error-message');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            
+            // Scroll error into view
+            errorElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function hideError() {
+            const errorElement = document.getElementById('error-message');
+            errorElement.style.display = 'none';
+            errorElement.textContent = '';
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            console.log('Form submitted');
+            
+            const formData = new FormData(event.target);
+            const firstName = formData.get('firstName').trim();
+            const phoneNumber = formData.get('phoneNumber').trim();
+            const smsConsent = formData.get('smsConsent');
+            
+            console.log('Form data:', { firstName, phoneNumber, smsConsent });
+            
+            // Clear previous errors
+            hideError();
+            
+            // Validation
+            if (!firstName || firstName.length < 2) {
+                showError('Please enter a valid first name (at least 2 characters)');
+                document.getElementById('firstName').focus();
+                return;
+            }
+            
+            if (!validatePhoneNumber(phoneNumber)) {
+                showError('Please enter a valid US phone number (10 digits)');
+                document.getElementById('phoneNumber').focus();
+                return;
+            }
+            
+            if (!smsConsent) {
+                showError('Please agree to receive SMS messages to continue');
+                document.getElementById('smsConsent').focus();
+                return;
+            }
+            
+            // Show loading state
+            const continueBtn = document.querySelector('.continue-btn');
+            const btnText = continueBtn.querySelector('.btn-text');
+            const loading = continueBtn.querySelector('.loading');
+            
+            btnText.style.display = 'none';
+            loading.style.display = 'inline';
+            continueBtn.disabled = true;
+            
+            // Store user data in sessionStorage for the checkout page
+            const userData = {
+                firstName: firstName,
+                phoneNumber: formatPhoneNumber(phoneNumber),
+                smsConsent: true,
+                timestamp: new Date().toISOString()
+            };
+            
+            sessionStorage.setItem('heyAlexUserData', JSON.stringify(userData));
+            
+            // Redirect to Stripe with user data as URL parameters
+            const stripeUrl = new URL('https://buy.stripe.com/cNifZgcv4dD3dsD0cLebu03');
+            stripeUrl.searchParams.set('client_reference_id', encodeURIComponent(phoneNumber.replace(/\D/g, '')));
+            stripeUrl.searchParams.set('prefilled_customer_name', encodeURIComponent(firstName));
+            
+            console.log('Redirecting to:', stripeUrl.toString());
+            
+            // Add a slight delay for better UX
+            setTimeout(() => {
+                window.location.href = stripeUrl.toString();
+            }, 1000);
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Signup page loaded');
+            
+            // Phone number formatting on input
+            const phoneInput = document.getElementById('phoneNumber');
+            
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    
+                    if (value.length >= 6) {
+                        value = `(${value.slice(0,3)}) ${value.slice(3,6)}-${value.slice(6,10)}`;
+                    } else if (value.length >= 3) {
+                        value = `(${value.slice(0,3)}) ${value.slice(3)}`;
+                    }
+                    
+                    e.target.value = value;
+                });
+                
+                // Prevent non-numeric characters except formatting
+                phoneInput.addEventListener('keypress', function(e) {
+                    const char = String.fromCharCode(e.which);
+                    if (!/[0-9().\-\s]/.test(char)) {
+                        e.preventDefault();
+                    }
+                });
+            }
+            
+            // Enhanced checkbox functionality
+            const checkboxLabel = document.querySelector('.checkbox-label');
+            const checkbox = document.getElementById('smsConsent');
+            const checkmark = document.querySelector('.checkmark');
+            
+            if (checkboxLabel && checkbox && checkmark) {
+                // Make entire label clickable
+                checkboxLabel.addEventListener('click', function(e) {
+                    if (e.target !== checkbox) {
+                        e.preventDefault();
+                        checkbox.checked = !checkbox.checked;
+                        console.log('Checkbox toggled:', checkbox.checked);
+                    }
+                });
+                
+                // Visual feedback on checkbox change
+                checkbox.addEventListener('change', function() {
+                    console.log('Checkbox changed:', this.checked);
+                    if (this.checked) {
+                        checkmark.style.transform = 'scale(1.1)';
+                        setTimeout(() => {
+                            checkmark.style.transform = 'scale(1)';
+                        }, 150);
+                    }
+                });
+                
+                // Keyboard accessibility
+                checkbox.addEventListener('keydown', function(e) {
+                    if (e.key === ' ' || e.key === 'Enter') {
+                        e.preventDefault();
+                        this.checked = !this.checked;
+                        this.dispatchEvent(new Event('change'));
+                    }
+                });
+            }
+            
+            // Attach form submit handler
+            const form = document.getElementById('user-details-form');
+            if (form) {
+                form.addEventListener('submit', handleFormSubmit);
+            }
+            
+            // Add interactive feature hover effects
+            document.querySelectorAll('.feature').forEach(feature => {
+                feature.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = '#ebe5d7';
+                });
+                
+                feature.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '#f2ede3';
+                });
+            });
+
+            // Focus on first name field when page loads
+            document.getElementById('firstName').focus();
+        });
+
+        // Track engagement
+        console.log('Hey Alex signup page analytics ready');
+        
+        // You could add analytics tracking here:
+        // gtag('event', 'page_view', { page_title: 'Signup Page' });
+    </script>
+</body>
+</html>
