@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hey Alex - Stay Connected, Live Offline</title>
+    <meta name="description" content="Get instant answers via SMS without endless scrolling. Weather, restaurants, news, and more - all through simple text messages.">
 
     <style>
         * {
@@ -23,10 +24,6 @@
             background-image: 
                 radial-gradient(circle at 1px 1px, rgba(44,36,22,0.1) 1px, transparent 0);
             background-size: 20px 20px;
-        }
-        a {
-          color: #EB9B21;
-          font-weight: bold;
         }
 
         .container {
@@ -55,10 +52,23 @@
 
         .pixel-logo {
             width: 120px;
-            height: auto;
+            height: 120px;
+            background: linear-gradient(135deg, #8b7355, #5a4a35);
+            border-radius: 12px;
+            position: relative;
             image-rendering: pixelated;
-            image-rendering: -moz-crisp-edges;
-            image-rendering: crisp-edges;
+            border: 3px solid #d4c5a9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #f9f6ef;
+            font-weight: 700;
+        }
+
+        .pixel-logo::before {
+            content: "📱";
+            font-size: 3rem;
         }
 
         .logo {
@@ -81,14 +91,17 @@
             color: #8b7355;
         }
 
-        .tagline {
-            font-size: 1rem;
+        .hero-tagline {
+            font-size: 1.1rem;
             color: #5a4a35;
             line-height: 1.6;
-            margin-bottom: 35px;
-            padding: 0 10px;
-            text-align: left;
+            margin-bottom: 25px;
+            padding: 15px;
+            text-align: center;
             font-style: italic;
+            background: #f2ede3;
+            border: 1px solid #d4c5a9;
+            border-radius: 8px;
         }
 
         .highlight {
@@ -98,13 +111,87 @@
             text-decoration-style: dotted;
         }
 
+        .value-props {
+            margin: 25px 0;
+            background: #f2ede3;
+            border: 2px solid #d4c5a9;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .value-props h3 {
+            font-size: 1.1rem;
+            color: #5a4a35;
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .value-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .value-list li {
+            padding: 8px 0;
+            border-bottom: 1px dotted #d4c5a9;
+            font-size: 0.9rem;
+            color: #6b5a42;
+        }
+
+        .value-list li:last-child {
+            border-bottom: none;
+        }
+
+        .value-list li::before {
+            content: "✓ ";
+            color: #8b7355;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 12px;
+            background: #f2ede3;
+            border: 1px solid #d4c5a9;
+            border-radius: 4px;
+            transition: transform 0.2s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(44,36,22,0.1);
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .feature-text {
+            font-size: 0.8rem;
+            color: #6b5a42;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         .pricing-section {
             background: #f2ede3;
             border: 2px solid #d4c5a9;
             border-radius: 8px;
             padding: 25px 20px;
             text-align: center;
-            margin-bottom: 35px;
+            margin: 35px 0;
             position: relative;
             box-shadow: 0 2px 8px rgba(44,36,22,0.1);
         }
@@ -141,8 +228,20 @@
         .price-description {
             font-size: 0.9rem;
             color: #6b5a42;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             font-style: italic;
+        }
+
+        .value-highlight {
+            background: #8b7355;
+            color: #f9f6ef;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .subscribe-btn {
@@ -169,6 +268,172 @@
 
         .subscribe-btn:active {
             transform: translateY(0);
+        }
+
+        .signup-form {
+            background: #ebe5d7;
+            border: 1px solid #d4c5a9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-header h4 {
+            font-size: 1.1rem;
+            color: #5a4a35;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-header p {
+            font-size: 0.85rem;
+            color: #6b5a42;
+            font-style: italic;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #5a4a35;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="tel"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #d4c5a9;
+            border-radius: 4px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 1rem;
+            background: #f9f6ef;
+            color: #2c2416;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="tel"]:focus {
+            outline: none;
+            border-color: #8b7355;
+            box-shadow: 0 0 0 2px rgba(139,115,85,0.2);
+        }
+
+        .checkbox-group {
+            margin: 20px 0;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: #6b5a42;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkmark {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #d4c5a9;
+            border-radius: 3px;
+            background: #f9f6ef;
+            margin-right: 10px;
+            margin-top: 2px;
+            position: relative;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked + .checkmark {
+            background: #5a4a35;
+            border-color: #5a4a35;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
+            content: "✓";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #f9f6ef;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .checkbox-text {
+            flex: 1;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .back-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            color: #8b7355;
+            border: 2px solid #d4c5a9;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            font-family: 'Courier Prime', monospace;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .back-btn:hover {
+            background: #d4c5a9;
+            color: #5a4a35;
+        }
+
+        .continue-btn {
+            flex: 2;
+            padding: 12px;
+            background: #5a4a35;
+            color: #f9f6ef;
+            border: 2px solid #5a4a35;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            font-family: 'Courier Prime', monospace;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .continue-btn:hover {
+            background: #f9f6ef;
+            color: #5a4a35;
+        }
+
+        .continue-btn:disabled {
+            background: #ccc;
+            border-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .examples-section {
@@ -217,32 +482,70 @@
             margin-left: 8px;
         }
 
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 15px;
+        .social-proof {
+            background: #f2ede3;
+            border: 1px solid #d4c5a9;
+            border-radius: 8px;
+            padding: 20px;
             margin: 25px 0;
+            text-align: center;
         }
 
-        .feature {
+        .social-proof h3 {
+            font-size: 1rem;
+            color: #5a4a35;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .testimonial {
+            font-style: italic;
+            color: #6b5a42;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .testimonial-author {
+            font-size: 0.8rem;
+            color: #8b7355;
+            font-weight: 700;
+        }
+
+        .faq-section {
+            margin: 30px 0;
+        }
+
+        .faq-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #5a4a35;
+            margin-bottom: 20px;
             text-align: center;
-            padding: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .faq-item {
             background: #f2ede3;
             border: 1px solid #d4c5a9;
             border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 10px;
         }
 
-        .feature-icon {
-            font-size: 1.5rem;
+        .faq-question {
+            font-weight: 700;
+            color: #5a4a35;
+            font-size: 0.9rem;
             margin-bottom: 8px;
         }
 
-        .feature-text {
-            font-size: 0.8rem;
+        .faq-answer {
             color: #6b5a42;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 0.85rem;
+            line-height: 1.4;
         }
 
         .powered-by {
@@ -255,18 +558,12 @@
         }
 
         .footer {
-            margin-top: 40px;
-            padding-top: 25px;
-            border-top: 2px dotted #d4c5a9;
             text-align: center;
-        }
-
-        .claude-attribution {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dotted #d4c5a9;
             font-size: 0.8rem;
             color: #8b7355;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
         }
 
         @media (max-width: 360px) {
@@ -305,14 +602,28 @@
     <div class="container">
         <!-- Logo Section -->
         <div class="logo-section">
-            <img class="pixel-logo" src="http://heyalex.co/hey-alex-logo.png" alt="Hey Alex Logo">
+            <div class="pixel-logo"></div>
             <div class="logo">Hey Alex</div>
         </div>
 
-        <!-- Tagline -->
-        <div class="tagline">
-            For those of you who need to <span class="highlight">stay connected</span> while living offline. 
-            Text Alex your questions so you can <span class="highlight">surf the surf</span> and not the web.
+        <!-- Hero Tagline -->
+        <div class="hero-tagline">
+            For those who need to <span class="highlight">stay connected</span> while living offline. 
+            Get instant answers via SMS — no apps, no browsing, no endless scrolling.
+        </div>
+
+        <!-- Value Propositions -->
+        <div class="value-props">
+            <h3>Why Choose Hey Alex?</h3>
+            <ul class="value-list">
+                <li>No apps to download or manage</li>
+                <li>Works on any phone, even flip phones</li>
+                <li>Instant answers without internet rabbit holes</li>
+                <li>Personal assistant that knows your location</li>
+                <li>Perfect for digital minimalists</li>
+                <li>Great for parents managing screen time</li>
+                <li>Essential info when you need it most</li>
+            </ul>
         </div>
 
         <!-- Features -->
@@ -334,12 +645,12 @@
                 <div class="feature-text">Business Details</div>
             </div>
             <div class="feature">
-                <div class="feature-icon">🎲</div>
-                <div class="feature-text">Random Facts</div>
+                <div class="feature-icon">🧠</div>
+                <div class="feature-text">Smart Answers</div>
             </div>
             <div class="feature">
-                <div class="feature-icon">📐</div>
-                <div class="feature-text">Quick Math</div>
+                <div class="feature-icon">📍</div>
+                <div class="feature-text">Local Search</div>
             </div>
         </div>
 
@@ -347,69 +658,175 @@
         <div class="pricing-section">
             <div class="price">$20</div>
             <div class="price-period">per month</div>
-            <div class="price-description">300 questions included</div>
+            <div class="value-highlight">Just $0.67 per day</div>
+            <div class="price-description">300 questions included • Cancel anytime</div>
             
-            <button class="subscribe-btn" onclick="handleSubscribe()">
-                <span class="btn-text">Subscribe Now</span>
-                <span class="loading" style="display: none;">Processing...</span>
-            </button>
+            <div class="subscription-form" id="subscription-form">
+                <button class="subscribe-btn" onclick="window.location.href='signup.html'">
+                    <span class="btn-text">Start Your Digital Detox</span>
+                </button>
+            </div>
+
+            <div class="signup-form" id="signup-form" style="display: none;">
+                <div class="form-header">
+                    <h4>Get Started with Hey Alex</h4>
+                    <p>Enter your details to begin your subscription</p>
+                </div>
+                
+                <form id="user-details-form">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required placeholder="e.g. Sarah">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <input type="tel" id="phoneNumber" name="phoneNumber" required placeholder="e.g. (555) 123-4567">
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="smsConsent" name="smsConsent" required>
+                            <span class="checkmark"></span>
+                            <span class="checkbox-text">YES, I agree to receive SMS text messages from Hey Alex. Text HELP for help, STOP to cancel at any time.</span>
+                        </label>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="button" class="back-btn" onclick="hideSignupForm()">Back</button>
+                        <button type="submit" class="continue-btn">
+                            <span class="btn-text">Continue to Payment</span>
+                            <span class="loading" style="display: none;">Processing...</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
             
             <div class="error-message" id="error-message"></div>
-            
-            <div class="powered-by">Powered by Stripe</div>
+            <div class="powered-by">Secured by Stripe</div>
+        </div>
+
+        <!-- Social Proof -->
+        <div class="social-proof">
+            <h3>What People Are Saying</h3>
+            <div class="testimonial">
+                "Finally, a way to get answers without falling into social media black holes. Game changer for my productivity!"
+            </div>
+            <div class="testimonial-author">— Sarah, Digital Marketing Manager</div>
         </div>
 
         <!-- Sample Questions -->
         <div class="examples-section">
-            <div class="examples-title">Sample Questions & Answers</div>
+            <div class="examples-title">See Alex in Action</div>
             
             <div class="example">
                 <div class="example-question">"weather today"</div>
-                <div class="example-answer">Currently 72°F and sunny in your area. High of 78°F today with 0% chance of rain. Perfect beach weather! 🌞</div>
+                <div class="example-answer">Hi Sarah! Currently 72°F and sunny in Austin. High of 78°F today with 0% chance of rain. Perfect for that outdoor lunch you planned! 🌞</div>
             </div>
 
             <div class="example">
-                <div class="example-question">"pizza places near me"</div>
-                <div class="example-answer">Tony's Pizza (★4.8) — Open until 11pm — 123 Main St. Known for authentic NY-style pizza. Call (555) 123-4567</div>
+                <div class="example-question">"best pizza near me"</div>
+                <div class="example-answer">Tony's Pizza (★4.8) — Open until 11pm — 123 Main St. Known for authentic NY-style pizza and garlic knots. Call (555) 123-4567 for takeout.</div>
             </div>
 
             <div class="example">
                 <div class="example-question">"latest tech news"</div>
-                <div class="example-answer">Apple announces new iPhone 16 with improved battery life — New model features 25% longer battery and enhanced camera capabilities for outdoor photography</div>
+                <div class="example-answer">Apple announces iPhone 16 with 25% longer battery life and enhanced camera for outdoor photography. The new Action Button replaces the mute switch for customizable shortcuts.</div>
             </div>
 
             <div class="example">
                 <div class="example-question">"coffee shop hours"</div>
-                <div class="example-answer">Blue Bottle Coffee (★4.6) — Open 6am-8pm today — 456 Oak Ave. Specialty roasts and pour-over coffee. Free WiFi available</div>
+                <div class="example-answer">Blue Bottle Coffee (★4.6) — Open 6am-8pm today — 456 Oak Ave. Specialty single-origin roasts and pour-over coffee. Free WiFi and outdoor seating available.</div>
             </div>
 
             <div class="example">
-                <div class="example-question">"recipe for pasta"</div>
-                <div class="example-answer">Classic Spaghetti Aglio e Olio — Boil pasta, sauté garlic in olive oil, add red pepper flakes, toss with pasta and parsley. Ready in 15 minutes!</div>
+                <div class="example-question">"quick pasta recipe"</div>
+                <div class="example-answer">Spaghetti Aglio e Olio: Boil 1lb pasta. Sauté 4 sliced garlic cloves in olive oil, add red pepper flakes, toss with pasta, parsley & parmesan. Ready in 15 minutes!</div>
             </div>
 
             <div class="example">
-                <div class="example-question">"random fact"</div>
-                <div class="example-answer">Octopuses have three hearts and blue blood! Two hearts pump blood to the gills, while the third pumps blood to the rest of the body.</div>
+                <div class="example-question">"fun fact about octopus"</div>
+                <div class="example-answer">Octopuses have three hearts and blue blood! Two hearts pump blood to the gills, while the third pumps blood to the rest of the body. They're also masters of camouflage!</div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <div class="faq-title">Frequently Asked Questions</div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How does Alex know my location?</div>
+                <div class="faq-answer">During setup, you'll share your city or zip code so Alex can provide personalized local information like weather and nearby restaurants.</div>
             </div>
 
-            <div class="example">
-                <div class="example-question">"what's 15% of 247"</div>
-                <div class="example-answer">15% of 247 = 37.05. To calculate: 247 × 0.15 = 37.05</div>
+            <div class="faq-item">
+                <div class="faq-question">What if I go over 300 messages?</div>
+                <div class="faq-answer">We'll send you gentle reminders as you approach your limit. After 300 messages, service pauses until your next billing cycle.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Can I use this on any phone?</div>
+                <div class="faq-answer">Yes! Alex works via SMS, so it's compatible with smartphones, flip phones, and any device that can send text messages.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">How accurate is the information?</div>
+                <div class="faq-answer">Alex searches current, reliable sources in real-time to provide you with the most up-to-date information available.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Can I cancel anytime?</div>
+                <div class="faq-answer">Absolutely! No contracts or commitments. Cancel your subscription anytime through your account or by contacting support.</div>
             </div>
         </div>
 
         <!-- Footer -->
         <div class="footer">
-            <div class="claude-attribution"><a href="https://claude.ai/">Powered Responsibly by Claude</a></div>
+            <p>Take control of your digital life. Get the answers you need without the distractions you don't.</p>
+            <p style="margin-top: 10px; font-size: 0.7rem;">Questions? Contact us at hello@heyalex.co</p>
+            <p><a href="http://claude.ai">Powered by Claude</a></p>
         </div>
     </div>
 
     <script>
         function handleSubscribe() {
-            // Redirect directly to your Stripe payment link
-            window.location.href = 'https://buy.stripe.com/cNifZgcv4dD3dsD0cLebu03';
+            // Add loading state
+            const btn = document.querySelector('.subscribe-btn');
+            const btnText = btn.querySelector('.btn-text');
+            const loading = btn.querySelector('.loading');
+            
+            btnText.style.display = 'none';
+            loading.style.display = 'inline';
+            btn.disabled = true;
+            btn.classList.add('loading');
+            
+            // Redirect to Stripe payment link
+            setTimeout(() => {
+                window.location.href = 'https://buy.stripe.com/cNifZgcv4dD3dsD0cLebu03';
+            }, 1000);
         }
+
+        // Add some interactive elements
+        document.querySelectorAll('.feature').forEach(feature => {
+            feature.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#ebe5d7';
+            });
+            
+            feature.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = '#f2ede3';
+            });
+        });
+
+        // Track engagement
+        let scrollDepth = 0;
+        window.addEventListener('scroll', function() {
+            const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+            if (scrollPercent > scrollDepth) {
+                scrollDepth = scrollPercent;
+                // You could send analytics here
+                console.log('Max scroll depth:', scrollDepth + '%');
+            }
+        });
     </script>
 </body>
 </html>
