@@ -489,7 +489,7 @@
                 <div class="price">$10</div>
                 <div class="price-period">per month</div>
                 <div class="value-highlight">Just $0.33 per day</div>
-                <div class="price-description">200 questions included with memory for conversations• Cancel anytime</div>
+                <div class="price-description">Questions with memory for conversations * Cancel anytime</div>
             </div>
 
             <div class="signup-form">
@@ -679,7 +679,7 @@
             sessionStorage.setItem('heyAlexUserData', JSON.stringify(userData));
             
             // Redirect to Stripe with user data as URL parameters
-            const stripeUrl = new URL('https://buy.stripe.com/cNifZgcv4dD3dsD0cLebu03');
+            const stripeUrl = new URL('https://buy.stripe.com/5kQ5kC66GaqRfALf7Febu05');
             stripeUrl.searchParams.set('client_reference_id', encodeURIComponent(phoneNumber.replace(/\D/g, '')));
             stripeUrl.searchParams.set('prefilled_customer_name', encodeURIComponent(firstName));
             
