@@ -1,0 +1,60 @@
+/*
+ * Bridge: point shadcn/ui's HSL tokens at the Device UI palette so any stock
+ * shadcn component (Dialog, Popover, Select…) lands in the same world.
+ * Import AFTER device.css and after shadcn's own :root block in index.css.
+ */
+:root,
+[data-theme="light"] {
+  --background: 43 16% 92%;          /* #EDEBE6 body */
+  --foreground: 0 0% 7%;             /* #111 ink */
+  --card: 43 16% 92%;
+  --card-foreground: 0 0% 7%;
+  --popover: 48 22% 95%;             /* #F6F5F1 key */
+  --popover-foreground: 0 0% 7%;
+  --primary: 16 100% 56%;            /* #FF5A1F signal — one per screen */
+  --primary-foreground: 0 0% 7%;     /* black on orange; white fails AA */
+  --secondary: 48 22% 95%;
+  --secondary-foreground: 0 0% 7%;
+  --muted: 44 12% 83%;               /* #D8D5CD well */
+  --muted-foreground: 40 6% 27%;     /* #4A4741 ink-2 */
+  --accent: 44 12% 83%;
+  --accent-foreground: 0 0% 7%;
+  --destructive: 0 0% 7%;            /* errors are bold ink, not red */
+  --destructive-foreground: 43 16% 92%;
+  --border: 42 10% 75%;              /* #C6C2B9 rule */
+  --input: 40 5% 45%;                /* #7A766E key-line */
+  --ring: 0 0% 7%;
+  --radius: 0.375rem;                /* 6px */
+}
+
+[data-theme="dark"] {
+  --background: 0 0% 11%;           /* #1C1C1C graphite */
+  --foreground: 43 16% 92%;
+  --card: 0 0% 11%;
+  --card-foreground: 43 16% 92%;
+  --popover: 60 1% 17%;              /* #2C2C2B key */
+  --popover-foreground: 43 16% 92%;
+  --primary: 16 100% 56%;
+  --primary-foreground: 0 0% 7%;
+  --secondary: 60 1% 17%;
+  --secondary-foreground: 43 16% 92%;
+  --muted: 0 0% 7%;                  /* #111 well */
+  --muted-foreground: 40 7% 64%;     /* #A9A59D ink-2 */
+  --accent: 60 1% 17%;
+  --accent-foreground: 43 16% 92%;
+  --destructive: 43 16% 92%;
+  --destructive-foreground: 0 0% 7%;
+  --border: 45 4% 21%;               /* #383734 rule */
+  --input: 47 4% 43%;                /* #727069 key-line */
+  --ring: 43 16% 92%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --background: 0 0% 11%; --foreground: 43 16% 92%; --card: 0 0% 11%; --card-foreground: 43 16% 92%;
+    --popover: 60 1% 17%; --popover-foreground: 43 16% 92%; --primary: 16 100% 56%; --primary-foreground: 0 0% 7%;
+    --secondary: 60 1% 17%; --secondary-foreground: 43 16% 92%; --muted: 0 0% 7%; --muted-foreground: 40 7% 64%;
+    --accent: 60 1% 17%; --accent-foreground: 43 16% 92%; --destructive: 43 16% 92%; --destructive-foreground: 0 0% 7%;
+    --border: 45 4% 21%; --input: 47 4% 43%; --ring: 43 16% 92%;
+  }
+}

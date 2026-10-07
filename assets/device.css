@@ -309,6 +309,8 @@
 .rocker[aria-checked="true"] .rocker__paddle { transform: rotateY(14deg); }
 .rocker:active .rocker__paddle { transform: rotateY(0deg); }
 
+.rocker--sm .rocker__housing { width: 72px; height: 34px; }
+
 .rocker:focus-visible { outline: none; }
 .rocker:focus-visible .rocker__housing { outline: 2px solid var(--focus); outline-offset: 3px; }
 
