@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Hey Alex Components</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/device.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      background: var(--body);
+      color: var(--ink);
+      font-family: var(--font-text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- Master strip (page chrome) ---- */
+    .strip {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px;
+      padding: 14px 24px 12px;
+      background: var(--body);
+      border-bottom: 1px solid var(--rule-strong);
+    }
+    .strip__id { display: grid; gap: 4px; margin-right: auto; }
+    .strip__id h1 { margin: 0; font-family: var(--font-label); font-size: 13px; font-weight: 700; letter-spacing: var(--track); text-transform: uppercase; }
+    .strip__ctl { display: flex; align-items: center; gap: 10px; }
+
+    /* ---- Panes ---- */
+    .panes { display: grid; }
+    .panes[data-view="split"] { grid-template-columns: 1fr 1fr; }
+    @media (max-width: 1100px) { .panes[data-view="split"] { grid-template-columns: 1fr; } }
+    .pane { background: var(--body); color: var(--ink); min-width: 0; }
+    .panes[data-view="split"] .pane + .pane { border-left: 1px solid var(--rule-strong); }
+    @media (max-width: 1100px) { .panes[data-view="split"] .pane + .pane { border-left: 0; border-top: 1px solid var(--rule-strong); } }
+
+    .sheet { max-width: 1040px; margin: 0 auto; padding: 24px 24px 64px; }
+    .sheet__plate {
+      display: flex; justify-content: space-between; gap: 16px;
+      padding-bottom: 10px; margin-bottom: 4px;
+    }
+
+    /* ---- Sections: grid with ref column ---- */
+    .sec {
+      display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 16px 24px;
+      padding: 18px 0 28px;
+      border-top: 1px solid var(--rule-strong);
+    }
+    @media (max-width: 640px) { .sec { grid-template-columns: 1fr; } }
+    .sec__id { display: grid; align-content: start; gap: 6px; }
+    .sec__num { font-family: var(--font-label); font-size: 28px; font-weight: 400; line-height: 1; letter-spacing: 0; }
+    .sec__note { margin: 0 0 16px; max-width: 60ch; font-size: 14px; line-height: 1.5; color: var(--ink-2); }
+
+    .specimens {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+      border-top: 1px solid var(--rule); border-left: 1px solid var(--rule);
+    }
+    .specimens--wide { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+    .specimen {
+      display: grid; grid-template-rows: 1fr auto; gap: 14px;
+      min-height: 120px; padding: 16px 14px 10px;
+      border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    }
+    .specimen__stage { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+    .specimen__stage--start { justify-content: flex-start; align-items: flex-start; }
+    .specimen__cap { display: flex; justify-content: space-between; gap: 8px; }
+
+    /* ---- LED list demo ---- */
+    .list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
+    .list li { display: flex; align-items: center; gap: 12px; padding: 12px 2px; border-bottom: 1px solid var(--rule); font-size: 15px; }
+    .list li > .grow { flex: 1; }
+    .list li[aria-current="true"] { font-weight: 600; }
+
+    /* ---- Tokens ---- */
+    .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0; border-top: 1px solid var(--rule); border-left: 1px solid var(--rule); }
+    .swatch { padding: 10px; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); display: grid; gap: 8px; }
+    .swatch__chip { height: 44px; border-radius: 4px; border: 1px solid var(--key-line); }
+    .contrast { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
+    .contrast th, .contrast td { text-align: left; padding: 8px 8px 8px 0; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+    .contrast td:nth-child(3), .contrast th:nth-child(3) { font-family: var(--font-label); font-variant-numeric: tabular-nums; }
+    .contrast .pair { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 24px; border-radius: 4px; border: 1px solid var(--key-line); font-family: var(--font-label); font-size: 11px; font-weight: 700; }
+    .verdict { display: inline-flex; align-items: center; gap: 6px; }
+
+    .type-spec { display: grid; gap: 14px; }
+    .type-spec p { margin: 0; }
+    .t-display { font-family: var(--font-text); font-size: 32px; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; }
+    .t-body { font-family: var(--font-text); font-size: 16px; line-height: 1.5; max-width: 52ch; }
+
+    .vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  </style>
+</head>
+<body>
+
+  <header class="strip">
+    <div class="strip__id">
+      <h1>Hey Alex · Device UI</h1>
+      <span class="silk silk--2 silk--sm">Component sheet · Rev A · For review</span>
+    </div>
+
+    <div class="strip__ctl" role="group" aria-label="View">
+      <span class="silk silk--2" aria-hidden="true">View</span>
+      <div class="keyrow" data-latch="one" id="view">
+        <button class="key key--sm" type="button" aria-pressed="false" data-view="light">Lt</button>
+        <button class="key key--sm" type="button" aria-pressed="false" data-view="dark">Dk</button>
+        <button class="key key--sm" type="button" aria-pressed="false" data-view="split">A|B</button>
+      </div>
+    </div>
+
+    <div class="strip__ctl">
+      <button class="toggle" type="button" role="switch" aria-checked="false" id="sound">
+        <span class="toggle__track"><span class="toggle__thumb"></span></span>
+        <span class="silk">Click</span>
+        <span class="silk silk--2 state" aria-hidden="true"><span class="state__off">Off</span><span class="state__on">On</span></span>
+      </button>
+    </div>
+  </header>
+
+  <main class="panes" id="panes" data-view="split"></main>
+
+  <template id="sheet">
+    <div class="sheet" data-scope>
+      <div class="sheet__plate">
+        <span class="silk" data-slot="theme">Pane A · Light</span>
+        <span class="silk silk--2">Light source ↖ top-left</span>
+      </div>
+
+      <!-- 00 TOKENS ===================================================== -->
+      <section class="sec">
+        <div class="sec__id"><span class="sec__num">00</span><span class="silk">Tokens</span></div>
+        <div>
+          <p class="sec__note">One signal color. Green appears only as a lit LED. Every text pair below is measured live from this pane's tokens.</p>
+          <div class="swatches" data-swatches></div>
+          <table class="contrast">
+            <thead><tr><th class="silk silk--2">Pair</th><th class="silk silk--2">Use</th><th class="silk silk--2">Ratio</th><th class="silk silk--2">Need</th><th class="silk silk--2">Result</th></tr></thead>
+            <tbody data-contrast></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 00.T TYPE ===================================================== -->
+      <section class="sec">
+        <div class="sec__id"><span class="sec__num">0T</span><span class="silk">Type</span></div>
+        <div class="type-spec">
+          <p class="silk">Silkscreen · JetBrains Mono 600 · 11px · +0.06em</p>
+          <p class="t-display">Ask Alex. Get one clear answer.</p>
+          <p class="t-body">Content text is Inter, set dark on the housing. Labels never go gray-on-gray: secondary ink is #4A4741 in light and #A9A59D in dark, both well above AA.</p>
+        </div>
+      </section>
+
+      <!-- 01 KEY ======================================================== -->
+      <section class="sec">
+        <div class="sec__id"><span class="sec__num">01</span><span class="silk">Key</span></div>
+        <div>
+          <p class="sec__note">6px radius, 1px darker bottom edge, 2px drop shadow. Press travels 2px down in 90ms and the shadow collapses. Try it with mouse, touch or Space.</p>
+          <div class="specimens">
+            <div class="specimen">
+              <div class="specimen__stage"><button class="key" type="button">Menu</button></div>
+              <div class="specimen__cap"><span class="silk">A</span><span class="silk silk--2">Default</span></div>
+            </div>
+            <div class="specimen">
+              <div class="specimen__stage"><button class="key is-pressed" type="button" tabindex="-1">Menu</button></div>
+              <div class="specimen__cap"><span class="silk">B</span><span class="silk silk--2">Pressed</span></div>
+            </div>
+            <div class="specimen">
+              <div class="specimen__stage"><button class="key" type="button" aria-pressed="true"><span class="led is-on" aria-hidden="true"></span>Hold</button></div>
+              <div class="specimen__cap"><span class="silk">C</span><span class="silk silk--2">Latched</span></div>
+            </div>
+            <div class="specimen">
+              <div class="specimen__stage"><button class="key key--alt" type="button"><span class="key__alt">Shift</span>Back</button></div>
+              <div class="specimen__cap"><span class="silk">D</span><span class="silk silk--2">Contrast</span></div>
+            </div>
+            <div class="specimen">
+              <div class="specimen__stage"><button class="key key--signal" type="button" style="min-width:96px">Send</button></div>
+              <div class="specimen__cap"><span class="silk">E</span><span class="silk silk--2">Signal</span></div>
+            </div>
+            <div class="specimen">
+              <div class="specimen__stage"><button class="key" type="button" disabled>Undo</button></div>
+              <div class="specimen__cap"><span class="silk">F</span><span class="silk silk--2">Disabled</span></div>
+            </div>
+            <div class="specimen">
+              <div class="specimen__stage">
+                <div class="keyrow" data-latch="one" role="group" aria-label="Units">
+                  <button class="key key--sm" type="button" aria-pressed="true">°F</button>
+                  <button class="key key--sm" type="button" aria-pressed="false">°C</button>
+                </div>
+              </div>
+              <div class="specimen__cap"><span class="silk">G</span><span class="silk silk--2">Latch group</span></div>
+            </div>
+            <div class="specimen">
+              <div class="specimen__stage"><button class="key key--round" type="button" aria-label="Record">Rec</button></div>
+              <div class="specimen__cap"><span class="silk">H</span><span class="silk silk--2">Round</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 02 TOGGLE ===================================================== -->
+      <section class="sec">
+        <div class="sec__id"><span class="sec__num">02</span><span class="silk">Toggle</span></div>
+        <div>
+          <p class="sec__note">Pill track, raised thumb. Thumb slides in 120ms ease-out. On is ink, not orange: toggles are frequent, the signal color isn't.</p>
+          <div class="specimens">
+            <div class="specimen">
+              <div class="specimen__stage">
+                <button class="toggle" type="button" role="switch" aria-checked="false">
+                  <span class="toggle__track"><span class="toggle__thumb"></span></span>
+                  <span class="silk">Alerts</span>
+                </button>
+              </div>
+              <div class="specimen__cap"><span class="silk">A</span><span class="silk silk--2">Off</span></div>
+            </div>
+            <div class="specimen">
+              <div class="specimen__stage">
+                <button class="toggle" type="button" role="switch" aria-checked="true">
+                  <span class="toggle__track"><span class="toggle__thumb"></span></span>
+                  <span class="silk">Alerts</span>
+                </button>
+              </div>
+              <div class="specimen__cap"><span class="silk">B</span><span class="silk silk--2">On</span></div>
+            </div>
+            <div class="specimen">
+              <div class="specimen__stage">
+                <button class="toggle" type="button" role="switch" aria-checked="true" data-led=".led-brief">
+                  <span class="led led--ok is-on led-brief" aria-hidden="true"></span>
+                  <span class="toggle__track"><span class="toggle__thumb"></span></span>
+                  <span class="silk state" aria-hidden="true"><span class="state__off">Off</span><span class="state__on">On</span></span>
+                  <span class="vh">Daily brief</span>
+                </button>
+              </div>
+              <div class="specimen__cap"><span class="silk">C</span><span class="silk silk--2">With LED</span></div>
+            </div>
+            <div class="specimen">
+              <div class="specimen__stage">
+                <button class="toggle" type="button" role="switch" aria-checked="false" disabled>
+                  <span class="toggle__track"><span class="toggle__thumb"></span></span>
+                  <span class="silk">Beta</span>
+                </button>
+              </div>
+              <div class="specimen__cap"><span class="silk">D</span><span class="silk silk--2">Disabled</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 03 ROCKER ===================================================== -->
+      <section class="sec">
+        <div class="sec__id"><span class="sec__num">03</span><span class="silk">Rocker</span></div>
+        <div>
+          <p class="sec__note">For durable binary settings — the kind you set once. The pushed half sits in shadow; the raised half catches the light. Silkscreen above names the side.</p>
+          <div class="specimens">
+            <div class="specimen">
+              <div class="specimen__stage">
+                <button class="rocker" type="button" role="switch" aria-checked="false" aria-label="Quiet hours">
+                  <span class="rocker__legend" aria-hidden="true"><span>Off</span><span>On</span></span>
+                  <span class="rocker__housing"><span class="rocker__paddle"><span class="rocker__half rocker__half--off">O</span><span class="rocker__half rocker__half--on">I</span></span></span>
+                </button>
+              </div>
+              <div class="specimen__cap"><span class="silk">A</span><span class="silk silk--2">Off</span></div>
+            </div>
+            <div class="specimen">
+              <div class="specimen__stage">
+                <button class="rocker" type="button" role="switch" aria-checked="true" aria-label="Quiet hours">
+                  <span class="rocker__legend" aria-hidden="true"><span>Off</span><span>On</span></span>
+                  <span class="rocker__housing"><span class="rocker__paddle"><span class="rocker__half rocker__half--off">O</span><span class="rocker__half rocker__half--on">I</span></span></span>
+                </button>
+              </div>
+              <div class="specimen__cap"><span class="silk">B</span><span class="silk silk--2">On</span></div>
+            </div>
+            <div class="specimen">
+              <div class="specimen__stage" style="gap:12px">
+                <button class="rocker" type="button" role="switch" aria-checked="true" aria-label="Units imperial or metric" data-led=".led-units">
+                  <span class="rocker__legend" aria-hidden="true"><span>Metric</span><span>US</span></span>
+                  <span class="rocker__housing"><span class="rocker__paddle"><span class="rocker__half rocker__half--off">M</span><span class="rocker__half rocker__half--on">US</span></span></span>
+                </button>
+                <span class="led led--ok is-on led-units" aria-hidden="true"></span>
+              </div>
+              <div class="specimen__cap"><span class="silk">C</span><span class="silk silk--2">Custom legend</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 LED ======================================================== -->
+      <section class="sec">
+        <div class="sec__id"><span class="sec__num">04</span><span class="silk">LED</span></div>
+        <div>
+          <p class="sec__note">Off is flat. Lit orange marks the active item; lit green marks done or on. LEDs never carry meaning alone — a label always sits beside them.</p>
+          <div class="specimens">
+            <div class="specimen">
+              <div class="specimen__stage"><span class="led led--lg" aria-hidden="true"></span></div>
+              <div class="specimen__cap"><span class="silk">A</span><span class="silk silk--2">Off</span></div>
+            </div>
+            <div class="specimen">
+              <div class="specimen__stage"><span class="led led--lg is-on" aria-hidden="true"></span></div>
+              <div class="specimen__cap"><span class="silk">B</span><span class="silk silk--2">Active</span></div>
+            </div>
+            <div class="specimen">
+              <div class="specimen__stage"><span class="led led--lg led--ok is-on" aria-hidden="true"></span></div>
+              <div class="specimen__cap"><span class="silk">C</span><span class="silk silk--2">Done / On</span></div>
+            </div>
+          </div>
+          <ul class="list" style="margin-top:20px" aria-label="Threads">
+            <li aria-current="true"><span class="led is-on" aria-hidden="true"></span><span class="grow">Weather · 70119</span><span class="silk silk--2">Active</span></li>
+            <li><span class="led led--ok is-on" aria-hidden="true"></span><span class="grow">Coffee near Magazine St</span><span class="silk silk--2">Done</span></li>
+            <li><span class="led" aria-hidden="true"></span><span class="grow">Saints score</span><span class="silk silk--2">Idle</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 05 DISPLAY ==================================================== -->
+      <section class="sec">
+        <div class="sec__id"><span class="sec__num">05</span><span class="silk">Display</span></div>
+        <div>
+          <p class="sec__note">The focus item lives here. Inset, a step darker than the housing, with an inner shadow and a monospace readout. One per screen.</p>
+          <div class="specimens specimens--wide">
+            <div class="specimen">
+              <div class="specimen__stage specimen__stage--start">
+                <div class="display" style="width:100%" role="status" aria-label="Last reply">
+                  <div class="display__bar"><span>CH 01 · SMS</span><span>RX <span data-clock>12:04</span></span></div>
+                  <p class="display__readout"><span class="display__dim">&gt; WEATHER 70119</span>
+78°F CLEAR
+H82 L71 RAIN 10%<span class="display__cursor" aria-hidden="true"></span></p>
+                </div>
+              </div>
+              <div class="specimen__cap"><span class="silk">A</span><span class="silk silk--2">Message readout</span></div>
+            </div>
+            <div class="specimen">
+              <div class="specimen__stage specimen__stage--start">
+                <div class="display" style="width:100%" aria-label="Messages left this month">
+                  <div class="display__bar"><span>Plan · Msgs left</span><span>Oct</span></div>
+                  <p class="display__readout display__readout--xl">042<span class="display__dim" style="font-size:20px"> / 100</span></p>
+                </div>
+              </div>
+              <div class="specimen__cap"><span class="silk">B</span><span class="silk silk--2">Numeric meter</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 06 CARD ======================================================= -->
+      <section class="sec">
+        <div class="sec__id"><span class="sec__num">06</span><span class="silk">Card</span></div>
+        <div>
+          <p class="sec__note">A flat panel defined by a rule, not a shadow. Reference number top-left, status LED top-right, actions bottom-right.</p>
+          <div class="specimens specimens--wide">
+            <div class="specimen">
+              <div class="specimen__stage specimen__stage--start">
+                <article class="card" style="width:100%">
+                  <header class="card__head">
+                    <span class="card__ref">01</span>
+                    <span class="silk card__title">Weather</span>
+                    <span class="card__status"><span class="led led--ok is-on" aria-hidden="true"></span><span class="silk silk--2">Synced</span></span>
+                  </header>
+                  <div class="card__body">
+                    <p style="margin:0">Text <strong>WEATHER</strong> and a zip code. Alex replies with the forecast in one message.</p>
+                  </div>
+                  <footer class="card__foot">
+                    <button class="key key--sm" type="button">Edit</button>
+                    <button class="key key--sm key--signal" type="button" style="min-width:72px">Send</button>
+                  </footer>
+                </article>
+              </div>
+              <div class="specimen__cap"><span class="silk">A</span><span class="silk silk--2">Action card</span></div>
+            </div>
+            <div class="specimen">
+              <div class="specimen__stage specimen__stage--start">
+                <article class="card" style="width:100%">
+                  <header class="card__head">
+                    <span class="card__ref">02</span>
+                    <span class="silk card__title">Settings</span>
+                  </header>
+                  <div class="card__body" style="padding-top:4px;padding-bottom:4px">
+                    <div class="card__row">
+                      <span>Daily brief</span>
+                      <button class="toggle" type="button" role="switch" aria-checked="true" aria-label="Daily brief">
+                        <span class="silk silk--2 state" aria-hidden="true"><span class="state__off">Off</span><span class="state__on">On</span></span>
+                        <span class="toggle__track"><span class="toggle__thumb"></span></span>
+                      </button>
+                    </div>
+                    <div class="card__row">
+                      <span>Quiet hours</span>
+                      <button class="rocker" type="button" role="switch" aria-checked="false" aria-label="Quiet hours">
+                        <span class="rocker__housing" style="width:72px;height:34px"><span class="rocker__paddle"><span class="rocker__half rocker__half--off">O</span><span class="rocker__half rocker__half--on">I</span></span></span>
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              </div>
+              <div class="specimen__cap"><span class="silk">B</span><span class="silk silk--2">Settings card</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 07 INPUT ====================================================== -->
+      <section class="sec">
+        <div class="sec__id"><span class="sec__num">07</span><span class="silk">Input</span></div>
+        <div>
+          <p class="sec__note">Same inset language as the display. Focus is a 2px ink ring, so orange stays free for the primary action. Errors go bold, not red.</p>
+          <div class="specimens specimens--wide">
+            <div class="specimen">
+              <label class="field">
+                <span class="field__label"><span class="silk">Name</span><span class="silk silk--2">07.A</span></span>
+                <input class="input" type="text" placeholder="First name" autocomplete="given-name">
+              </label>
+              <div class="specimen__cap"><span class="silk">A</span><span class="silk silk--2">Default</span></div>
+            </div>
+            <div class="specimen">
+              <label class="field">
+                <span class="field__label"><span class="silk">Mobile</span><span class="silk silk--2">07.B</span></span>
+                <span class="input-group"><span class="input-group__prefix" aria-hidden="true">+1</span><input class="input" type="tel" inputmode="tel" placeholder="504 555 0142" autocomplete="tel-national"></span>
+                <span class="field__hint">US numbers only</span>
+              </label>
+              <div class="specimen__cap"><span class="silk">B</span><span class="silk silk--2">Prefixed</span></div>
+            </div>
+            <div class="specimen">
+              <label class="field is-error">
+                <span class="field__label"><span class="silk">Zip</span><span class="silk silk--2">07.C</span></span>
+                <input class="input" type="text" inputmode="numeric" value="7011" aria-invalid="true">
+                <span class="field__hint"><span class="led is-on" aria-hidden="true"></span>Err · Zip needs 5 digits</span>
+              </label>
+              <div class="specimen__cap"><span class="silk">C</span><span class="silk silk--2">Error</span></div>
+            </div>
+            <div class="specimen">
+              <label class="field">
+                <span class="field__label"><span class="silk">Plan</span><span class="silk silk--2">07.D</span></span>
+                <input class="input" type="text" value="Basic" disabled>
+              </label>
+              <div class="specimen__cap"><span class="silk">D</span><span class="silk silk--2">Disabled</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </template>
+
+  <script src="../assets/device.js"></script>
+  <script>
+  (function () {
+    var panes = document.getElementById('panes');
+    var tpl = document.getElementById('sheet');
+    var root = document.documentElement;
+
+    var TOKENS = ['--body', '--ink', '--ink-2', '--well', '--key', '--key-alt', '--signal', '--ok', '--rule'];
+    var PAIRS = [
+      ['--ink', '--body', 'Content, labels', 4.5],
+      ['--ink-2', '--body', 'Secondary labels', 4.5],
+      ['--well-ink', '--well', 'Display / input text', 4.5],
+      ['--well-ink-2', '--well', 'Display bar, placeholder', 4.5],
+      ['--ink-2', '--well', 'Placeholder', 4.5],
+      ['--key-ink', '--key', 'Key legend', 4.5],
+      ['--key-alt-ink', '--key-alt', 'Contrast key legend', 4.5],
+      ['--signal-ink', '--signal', 'Signal key legend', 4.5],
+      ['--key-line', '--body', 'Key / field outline', 3],
+      [['--signal', '--signal-edge'], '--body', 'Lit LED (active) · fill or ring', 3],
+      [['--ok', '--ok-line'], '--body', 'Lit LED (done) · fill or ring', 3],
+      ['--focus', '--body', 'Focus ring', 3]
+    ];
+
+    function hex(v) {
+      v = v.trim().replace('#', '');
+      if (v.length === 3) v = v.split('').map(function (c) { return c + c; }).join('');
+      return [0, 2, 4].map(function (i) { return parseInt(v.substr(i, 2), 16) / 255; });
+    }
+    function lum(rgb) {
+      var c = rgb.map(function (x) { return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); });
+      return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+    }
+    function ratio(a, b) {
+      var l1 = lum(hex(a)), l2 = lum(hex(b));
+      return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+    }
+
+    function fillTokens(pane) {
+      var cs = getComputedStyle(pane);
+      var v = function (n) { return cs.getPropertyValue(n).trim(); };
+
+      pane.querySelector('[data-swatches]').innerHTML = TOKENS.map(function (t) {
+        return '<div class="swatch"><div class="swatch__chip" style="background:var(' + t + ')"></div>' +
+          '<span class="silk">' + t.slice(2) + '</span><span class="silk silk--2">' + v(t).toUpperCase() + '</span></div>';
+      }).join('');
+
+      pane.querySelector('[data-contrast]').innerHTML = PAIRS.map(function (p) {
+        var fg = [].concat(p[0]);
+        var r = Math.max.apply(null, fg.map(function (f) { return ratio(v(f), v(p[1])); }));
+        if (Array.isArray(p[0])) p = [fg[0]].concat(p.slice(1));
+        var pass = r >= p[3];
+        return '<tr>' +
+          '<td><span class="pair" style="background:var(' + p[1] + ');color:var(' + p[0] + ')">Aa</span></td>' +
+          '<td>' + p[2] + '</td>' +
+          '<td>' + r.toFixed(1) + ':1</td>' +
+          '<td class="silk silk--2">' + (p[3] === 3 ? 'UI 3:1' : 'AA 4.5:1') + '</td>' +
+          '<td><span class="verdict"><span class="led ' + (pass ? 'led--ok is-on' : 'is-on') + '" aria-hidden="true"></span>' +
+          '<span class="silk">' + (pass ? 'Pass' : 'Fail') + '</span></span></td></tr>';
+      }).join('');
+    }
+
+    function stamp(theme, label) {
+      var pane = document.createElement('div');
+      pane.className = 'pane';
+      if (theme) pane.setAttribute('data-theme', theme);
+      pane.appendChild(tpl.content.cloneNode(true));
+      pane.querySelector('[data-slot="theme"]').textContent = label;
+      panes.appendChild(pane);
+      return pane;
+    }
+
+    function render(view) {
+      panes.innerHTML = '';
+      panes.setAttribute('data-view', view);
+      var made = [];
+      if (view === 'split') {
+        root.removeAttribute('data-theme');
+        made.push(stamp('light', 'Pane A · Light'), stamp('dark', 'Pane B · Dark'));
+      } else {
+        root.setAttribute('data-theme', view);
+        made.push(stamp(null, view === 'dark' ? 'Dark' : 'Light'));
+      }
+      made.forEach(fillTokens);
+      tickClock();
+      document.querySelectorAll('#view .key').forEach(function (k) {
+        k.setAttribute('aria-pressed', String(k.dataset.view === view));
+      });
+      try { localStorage.setItem('device.view', view); } catch (e) {}
+    }
+
+    function tickClock() {
+      var d = new Date();
+      var t = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+      document.querySelectorAll('[data-clock]').forEach(function (el) { el.textContent = t; });
+    }
+    setInterval(tickClock, 30000);
+
+    document.getElementById('view').addEventListener('device:change', function (e) {
+      var k = e.target.closest('[data-view]');
+      if (k) render(k.dataset.view);
+    });
+
+    var sound = document.getElementById('sound');
+    sound.setAttribute('aria-checked', String(Device.soundEnabled()));
+    sound.addEventListener('device:change', function (e) { Device.setSound(e.detail.on); if (e.detail.on) Device.click(); });
+
+    var saved = null;
+    try { saved = localStorage.getItem('device.view'); } catch (e) {}
+    var params = new URLSearchParams(location.search);
+    var initial = params.get('view') || saved || (matchMedia('(min-width: 1101px)').matches ? 'split' : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+    render(['light', 'dark', 'split'].indexOf(initial) > -1 ? initial : 'split');
+  })();
+  </script>
+</body>
+</html>

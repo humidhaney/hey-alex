@@ -1,0 +1,443 @@
+/* ==========================================================================
+   Hey Alex — Device UI
+   Physical-interface component layer. TE hardware language, Braun restraint.
+   Light source: top-left. Shadows fall right/down.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Tokens
+   Light is the default. Dark applies via system preference (unless the page
+   pins light) or explicitly via [data-theme="dark"] on any ancestor.
+   -------------------------------------------------------------------------- */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --body: #EDEBE6;          /* warm off-white housing */
+  --ink: #111111;           /* silkscreen / content text */
+  --ink-2: #4A4741;         /* secondary labels — still AA on body + well */
+  --rule: #C6C2B9;          /* thin section dividers */
+  --rule-strong: #111111;   /* section heads */
+
+  --well: #D8D5CD;          /* inset: display window, input */
+  --well-ink: #111111;
+  --well-ink-2: #3F3C37;
+
+  --key: #F6F5F1;
+  --key-top: #FCFBF9;       /* key-top shading start */
+  --key-pressed: #E6E4DE;
+  --rocker-in: #C9C5BC;
+  --key-line: #7A766E;      /* key outline: ≥3:1 on body */
+  --key-edge: #9E998F;      /* 1px darker bottom edge */
+  --key-ink: #111111;
+  --key-hi: rgba(255, 255, 255, .75);
+
+  --key-alt: #262626;       /* contrast key (graphite on light body) */
+  --key-alt-top: #303030;
+  --key-alt-pressed: #1E1E1E;
+  --key-alt-line: #111111;
+  --key-alt-edge: #000000;
+  --key-alt-ink: #EDEBE6;
+  --key-alt-hi: rgba(255, 255, 255, .08);
+
+  --signal: #FF5A1F;        /* TE orange — primary action + active state */
+  --signal-top: #FF6B36;
+  --signal-pressed: #F0511A;
+  --signal-line: #B83A0C;
+  --signal-edge: #A8360B;
+  --signal-ink: #111111;    /* black on orange: 6.7:1. white would fail. */
+  --signal-glow: rgba(255, 90, 31, .55);
+
+  --ok: #2E7D5B;            /* Braun green — done / on LEDs only */
+  --ok-line: #215C43;
+  --ok-glow: rgba(46, 125, 91, .45);
+
+  --led-off: #CBC7BE;
+  --led-off-line: #8F8A80;
+
+  --track-off: #D2CEC6;
+  --track-on: #111111;
+
+  --drop: rgba(17, 17, 17, .22);
+  --drop-soft: rgba(17, 17, 17, .10);
+  --inset: rgba(17, 17, 17, .22);
+  --focus: #111111;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --body: #1C1C1C; --ink: #EDEBE6; --ink-2: #A9A59D; --rule: #383734; --rule-strong: #EDEBE6;
+    --well: #111111; --well-ink: #EDEBE6; --well-ink-2: #A9A59D;
+    --key: #2C2C2B; --key-top: #353534; --key-pressed: #252524; --rocker-in: #181817; --key-line: #727069; --key-edge: #0A0A0A; --key-ink: #EDEBE6; --key-hi: rgba(255, 255, 255, .07);
+    --key-alt: #E6E3DD; --key-alt-top: #F1EFEA; --key-alt-pressed: #D9D6CF; --key-alt-line: #E6E3DD; --key-alt-edge: #8F8A80; --key-alt-ink: #111111; --key-alt-hi: rgba(255, 255, 255, .7);
+    --signal-edge: #8E2E08; --signal-line: #FF5A1F;
+    --led-off: #2F2E2C; --led-off-line: #5E5C58;
+    --track-off: #111111; --track-on: #EDEBE6;
+    --drop: rgba(0, 0, 0, .60); --drop-soft: rgba(0, 0, 0, .35); --inset: rgba(0, 0, 0, .70); --focus: #EDEBE6;
+  }
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --body: #1C1C1C; --ink: #EDEBE6; --ink-2: #A9A59D; --rule: #383734; --rule-strong: #EDEBE6;
+  --well: #111111; --well-ink: #EDEBE6; --well-ink-2: #A9A59D;
+  --key: #2C2C2B; --key-top: #353534; --key-pressed: #252524; --rocker-in: #181817; --key-line: #727069; --key-edge: #0A0A0A; --key-ink: #EDEBE6; --key-hi: rgba(255, 255, 255, .07);
+  --key-alt: #E6E3DD; --key-alt-top: #F1EFEA; --key-alt-pressed: #D9D6CF; --key-alt-line: #E6E3DD; --key-alt-edge: #8F8A80; --key-alt-ink: #111111; --key-alt-hi: rgba(255, 255, 255, .7);
+  --signal-edge: #8E2E08; --signal-line: #FF5A1F;
+  --led-off: #2F2E2C; --led-off-line: #5E5C58;
+  --track-off: #111111; --track-on: #EDEBE6;
+  --drop: rgba(0, 0, 0, .60); --drop-soft: rgba(0, 0, 0, .35); --inset: rgba(0, 0, 0, .70); --focus: #EDEBE6;
+}
+
+:root {
+  --font-label: "JetBrains Mono", "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-text: "Inter", "Helvetica Now Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --track: .06em;
+  --press: 90ms;
+  --slide: 120ms;
+  --ease: cubic-bezier(0, 0, .2, 1); /* ease-out, no overshoot */
+  --radius-key: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --press: 0ms; --slide: 0ms; }
+}
+
+/* --------------------------------------------------------------------------
+   Silkscreen label — the default voice for every control legend
+   -------------------------------------------------------------------------- */
+.silk {
+  font-family: var(--font-label);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.silk--2 { color: var(--ink-2); font-weight: 500; }
+.silk--sm { font-size: 10px; }
+
+/* --------------------------------------------------------------------------
+   Key
+   -------------------------------------------------------------------------- */
+.key {
+  --k-bg: var(--key);
+  --k-top: var(--key-top);
+  --k-pressed: var(--key-pressed);
+  --k-line: var(--key-line);
+  --k-edge: var(--key-edge);
+  --k-ink: var(--key-ink);
+  --k-hi: var(--key-hi);
+
+  appearance: none;
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 56px;
+  height: 56px;
+  padding: 7px 8px;
+  margin: 0 0 2px;            /* reserve travel so neighbours don't shift */
+  border: 1px solid var(--k-line);
+  border-radius: var(--radius-key);
+  background: linear-gradient(180deg, var(--k-top), var(--k-bg) 65%);
+  color: var(--k-ink);
+  font-family: var(--font-label);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow:
+    inset 1px 1px 0 var(--k-hi),     /* top-left catch light */
+    inset 0 -1px 0 var(--k-edge),    /* darker bottom edge */
+    1px 2px 0 var(--drop),           /* 2px drop shadow */
+    2px 3px 4px var(--drop-soft);
+  transform: translateY(0);
+  transition:
+    transform var(--press) var(--ease),
+    box-shadow var(--press) var(--ease),
+    background-color var(--press) var(--ease);
+}
+
+.key:active:not(:disabled),
+.key.is-pressed {
+  transform: translateY(2px);
+  background: var(--k-pressed);
+  box-shadow: inset 0 -1px 0 var(--k-edge), 0 0 0 transparent, 0 0 0 transparent;
+}
+
+/* Latching key: sits 1px in while engaged */
+.key[aria-pressed="true"] {
+  transform: translateY(1px);
+  background: var(--k-pressed);
+  box-shadow:
+    inset 0 1px 2px var(--inset),
+    inset 0 -1px 0 var(--k-edge),
+    0 1px 0 var(--drop);
+}
+.key[aria-pressed="true"]:active { transform: translateY(2px); box-shadow: inset 0 1px 2px var(--inset); }
+
+.key:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+.key:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+  box-shadow: inset 0 -1px 0 var(--k-edge);
+}
+
+.key--alt {
+  --k-bg: var(--key-alt); --k-top: var(--key-alt-top); --k-pressed: var(--key-alt-pressed);
+  --k-line: var(--key-alt-line); --k-edge: var(--key-alt-edge); --k-ink: var(--key-alt-ink); --k-hi: var(--key-alt-hi);
+}
+.key--signal {
+  --k-bg: var(--signal); --k-top: var(--signal-top); --k-pressed: var(--signal-pressed);
+  --k-line: var(--signal-line); --k-edge: var(--signal-edge); --k-ink: var(--signal-ink); --k-hi: rgba(255, 255, 255, .35);
+}
+
+.key--wide { min-width: 120px; }
+.key--sm { min-width: 40px; height: 40px; padding: 5px 7px; font-size: 10px; }
+.key--round { border-radius: 50%; width: 56px; padding: 0; align-items: center; justify-content: center; }
+
+/* Secondary legend in the top-right, like a shift function */
+.key__alt {
+  position: absolute; top: 7px; right: 8px;
+  font-size: 9px; font-weight: 500; opacity: .8;
+}
+/* LED window in the top-left of a key */
+.key > .led { position: absolute; top: 8px; left: 8px; }
+
+.keyrow { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+
+/* --------------------------------------------------------------------------
+   Toggle — pill track, raised thumb
+   -------------------------------------------------------------------------- */
+.toggle {
+  appearance: none; border: 0; background: none; padding: 0; margin: 0;
+  display: inline-flex; align-items: center; gap: 10px;
+  color: var(--ink); font: inherit; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.toggle__track {
+  position: relative; flex: none;
+  width: 46px; height: 26px; border-radius: 13px;
+  background: var(--track-off);
+  border: 1px solid var(--key-line);
+  box-shadow: inset 0 1px 2px var(--inset);
+  transition: background-color var(--slide) var(--ease), border-color var(--slide) var(--ease);
+}
+.toggle__thumb {
+  position: absolute; top: 2px; left: 2px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: linear-gradient(180deg, var(--key-top), var(--key) 65%);
+  border: 1px solid var(--key-line);
+  box-shadow: inset 1px 1px 0 var(--key-hi), inset 0 -1px 0 var(--key-edge), 1px 2px 0 var(--drop);
+  transition: transform var(--slide) var(--ease);
+}
+.toggle[aria-checked="true"] .toggle__track { background: var(--track-on); border-color: var(--track-on); }
+.toggle[aria-checked="true"] .toggle__thumb { transform: translateX(20px); }
+.toggle:focus-visible { outline: none; }
+.toggle:focus-visible .toggle__track { outline: 2px solid var(--focus); outline-offset: 3px; }
+.toggle:disabled { cursor: not-allowed; opacity: .45; }
+
+/* ON / OFF state silkscreen — the visible one follows aria-checked */
+.state { display: inline-grid; }
+.state > * { grid-area: 1 / 1; transition: opacity var(--slide) var(--ease); }
+[aria-checked="false"] .state__on,
+[aria-checked="true"] .state__off { opacity: 0; }
+
+/* --------------------------------------------------------------------------
+   Rocker switch — binary settings
+   -------------------------------------------------------------------------- */
+.rocker {
+  appearance: none; border: 0; background: none; padding: 0; margin: 0;
+  display: inline-flex; flex-direction: column; align-items: stretch; gap: 6px;
+  color: var(--ink); font: inherit; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.rocker__legend {
+  display: flex; justify-content: space-around;
+  font-family: var(--font-label); font-size: 10px; font-weight: 600;
+  letter-spacing: var(--track); text-transform: uppercase; color: var(--ink-2);
+}
+.rocker[aria-checked="false"] .rocker__legend > :first-child,
+.rocker[aria-checked="true"] .rocker__legend > :last-child { color: var(--ink); }
+
+.rocker__housing {
+  display: block; width: 88px; height: 42px; padding: 3px;
+  border-radius: 7px;
+  background: var(--well);
+  border: 1px solid var(--key-line);
+  box-shadow: inset 0 1px 3px var(--inset);
+  perspective: 180px;
+}
+.rocker__paddle {
+  display: flex; height: 100%;
+  border-radius: 4px;
+  border: 1px solid var(--key-line);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform var(--press) var(--ease);
+}
+.rocker__half {
+  flex: 1; display: grid; place-items: center;
+  font-family: var(--font-label); font-size: 12px; font-weight: 700; color: var(--key-ink);
+  transition: background-color var(--press) var(--ease), box-shadow var(--press) var(--ease);
+}
+.rocker__half + .rocker__half { border-left: 1px solid var(--key-edge); }
+
+/* raised half catches light; pushed half sits in shadow, with the raised
+   half casting across the pivot onto it */
+.rocker__half { background: var(--rocker-in); color: var(--ink-2); }
+.rocker[aria-checked="false"] .rocker__half--off { box-shadow: inset -6px 0 6px -3px var(--inset), inset 0 1px 3px var(--inset); }
+.rocker[aria-checked="true"] .rocker__half--on { box-shadow: inset 6px 0 6px -3px var(--inset), inset 0 1px 3px var(--inset); }
+.rocker[aria-checked="false"] .rocker__half--on,
+.rocker[aria-checked="true"] .rocker__half--off {
+  background: linear-gradient(180deg, var(--key-top), var(--key) 65%);
+  color: var(--key-ink);
+  box-shadow: inset 1px 1px 0 var(--key-hi), inset 0 -2px 0 var(--key-edge);
+}
+.rocker[aria-checked="false"] .rocker__paddle { transform: rotateY(-14deg); }
+.rocker[aria-checked="true"] .rocker__paddle { transform: rotateY(14deg); }
+.rocker:active .rocker__paddle { transform: rotateY(0deg); }
+
+.rocker:focus-visible { outline: none; }
+.rocker:focus-visible .rocker__housing { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+/* --------------------------------------------------------------------------
+   LED
+   -------------------------------------------------------------------------- */
+.led {
+  display: inline-block; flex: none;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--led-off);
+  box-shadow: inset 0 0 0 1px var(--led-off-line);
+  transition: background-color var(--press) var(--ease), box-shadow var(--press) var(--ease);
+}
+.led--lg { width: 10px; height: 10px; }
+.led.is-on {
+  background: var(--signal);
+  box-shadow: inset 0 0 0 1px var(--signal-edge), 0 0 6px 1px var(--signal-glow);
+}
+.led--ok.is-on {
+  background: var(--ok);
+  box-shadow: inset 0 0 0 1px var(--ok-line), 0 0 6px 1px var(--ok-glow);
+}
+
+/* --------------------------------------------------------------------------
+   Display window — the focus item, LCD-style
+   -------------------------------------------------------------------------- */
+.display {
+  position: relative;
+  display: grid; gap: 10px;
+  padding: 12px 14px 14px;
+  border-radius: 6px;
+  background: var(--well);
+  color: var(--well-ink);
+  border: 1px solid var(--key-line);
+  box-shadow: inset 0 2px 5px var(--inset), inset 0 0 0 1px var(--drop-soft);
+  font-family: var(--font-label);
+  font-variant-numeric: tabular-nums;
+}
+.display__bar {
+  display: flex; justify-content: space-between; gap: 12px;
+  font-size: 10px; font-weight: 500; letter-spacing: var(--track); text-transform: uppercase;
+  color: var(--well-ink-2);
+}
+.display__readout {
+  margin: 0;
+  font-size: 20px; font-weight: 500; line-height: 1.3; letter-spacing: .02em;
+  white-space: pre-wrap; word-break: break-word;
+}
+.display__readout--xl { font-size: 44px; font-weight: 400; line-height: 1; letter-spacing: 0; }
+.display__dim { color: var(--well-ink-2); }
+.display__cursor {
+  display: inline-block; width: .55em; height: 1em; margin-left: .1em;
+  background: currentColor; vertical-align: -.14em;
+  animation: device-blink 1.06s steps(1) infinite;
+}
+@keyframes device-blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .display__cursor { animation: none; } }
+
+/* --------------------------------------------------------------------------
+   Card / panel
+   -------------------------------------------------------------------------- */
+.card {
+  display: grid; grid-template-rows: auto 1fr auto;
+  border: 1px solid var(--key-line);
+  border-radius: 8px;
+  background: var(--body);
+  color: var(--ink);
+}
+.card__head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+}
+.card__ref { font-family: var(--font-label); font-size: 11px; font-weight: 700; letter-spacing: var(--track); }
+.card__title { flex: 1; }
+.card__status { display: inline-flex; align-items: center; gap: 6px; }
+.card__body {
+  padding: 14px;
+  font-family: var(--font-text); font-size: 15px; line-height: 1.5; color: var(--ink);
+}
+.card__body > * + * { margin-top: 12px; }
+.card__foot {
+  display: flex; justify-content: flex-end; gap: 6px;
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--rule);
+}
+.card__row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 0;
+}
+.card__row + .card__row { border-top: 1px solid var(--rule); margin-top: 0; }
+
+/* --------------------------------------------------------------------------
+   Text input
+   -------------------------------------------------------------------------- */
+.field { display: grid; gap: 6px; }
+.field__label { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.field__hint {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--font-label); font-size: 10px; font-weight: 500;
+  letter-spacing: var(--track); text-transform: uppercase; color: var(--ink-2);
+}
+
+.input {
+  width: 100%; min-width: 0;
+  padding: 11px 12px;
+  font-family: var(--font-text); font-size: 16px; line-height: 1.4; color: var(--ink);
+  background: var(--well);
+  border: 1px solid var(--key-line);
+  border-radius: 6px;
+  box-shadow: inset 0 1px 3px var(--inset);
+  outline: none;
+  transition: border-color var(--press) var(--ease);
+}
+.input::placeholder { color: var(--ink-2); opacity: 1; }
+.input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.input:disabled { opacity: .45; cursor: not-allowed; }
+.input[aria-invalid="true"] { border-color: var(--ink); border-width: 2px; padding: 10px 11px; }
+.field.is-error .field__hint { color: var(--ink); }
+
+.input-group { display: flex; }
+.input-group__prefix {
+  display: grid; place-items: center; padding: 0 12px;
+  font-family: var(--font-label); font-size: 13px; font-weight: 600; color: var(--ink);
+  background: var(--well);
+  border: 1px solid var(--key-line); border-right: 0;
+  border-radius: 6px 0 0 6px;
+  box-shadow: inset 0 1px 3px var(--inset);
+}
+.input-group > .input { border-radius: 0 6px 6px 0; font-family: var(--font-label); letter-spacing: .04em; }
+.input-group:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.input-group > .input:focus-visible { outline: none; }
